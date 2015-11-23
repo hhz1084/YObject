@@ -5,7 +5,11 @@ class Article
     {
         
     }
-    public function getArticle()
+    public static function getArticle()
+    {
+        
+    }
+    public static function putArticle()
     {
         
     }
