@@ -1,7 +1,4 @@
 <?php
 include_once 'App.php';
-$str = <<<EOT
-    123456
-EOT;
 
-echo Crypt::DeCrypt(Crypt::EnCrypt($str, 'ss'),'xx');
+print_r(Article::getArticle());
