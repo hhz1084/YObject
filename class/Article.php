@@ -14,10 +14,20 @@ class Article
             $b = explode('.', $b);
             return intval($a[0]) > intval($b[0]) ? -1 : 1;
         });
-        return $file;
+        $result = array();
+        foreach ($file as $f){
+            $c = File::read(ROOT_PATH.self::ARTICLE_DIR.'/'.$f);
+            $c = json_decode($c,true);
+            $tmp = array(
+                'id'=>$f,
+                'title'=>Crypt::DeCrypt($c['title'], uniqid())
+            );
+            $result[] = $tmp;
+        }
+        return $result;
     }
-    public static function putArticle()
+    public static function putArticle($title,$content)
     {
-        
+        File::write(ROOT_PATH, self::ARTICLE_DIR.'/'.$title, $content);
     }
 }
