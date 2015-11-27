@@ -1,9 +1,12 @@
-<html>
-<head>
-<meta charset="utf-8" />
-<title>文章列表</title>
-<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
-<link rel="stylesheet" href="/static/css/main.css" />
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>文章列表</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/main.css" />
 </head>
 <body>
 	<div class="panel panel-info">
@@ -19,7 +22,15 @@
 		<table class="table">
 		  <?php 
 		    if (empty($article)){
-		        
+		  ?>
+		        <tr><td>暂无数据</td></tr>
+		  <?php
+		    }else{
+		        foreach ($article as $k=>$v){
+		          ?>
+        		  <tr><td><a href="/d.php?id=<?php echo $v['id']?>"><?php echo ($k+1).'.'.$v['title']?></a></td></tr>
+        		  <?php
+		        }
 		    }
 		  ?>
 		</table>

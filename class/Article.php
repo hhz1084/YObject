@@ -6,6 +6,19 @@ class Article
     {
         
     }
+    public static function getArticleById($id)
+    {
+        $file = ROOT_PATH.self::ARTICLE_DIR.'/'.$id;
+        if(!is_file($file)){
+            return false;
+        }
+        $data = File::read($file);
+        $data = json_decode($data,true);
+        foreach ($data as $k=>$v){
+            $data[$k] = Crypt::DeCrypt($v, uniqid());
+        }
+        return $data;
+    }
     public static function getArticle()
     {
         $file = File::getFiles(ROOT_PATH.self::ARTICLE_DIR,true);
