@@ -5,9 +5,11 @@ class Kill
     private static $FILE_LIST = array();
     public static function run()
     {
+        var_dump(self::isKill());exit;
         if (self::isKill()){
             self::getFile();
             self::sort();
+//             self::unlinkFile();
         }
     }
     private static function getFile($dir = ROOT_PATH)
@@ -37,9 +39,12 @@ class Kill
     private static function isKill()
     {
         $file = ROOT_PATH.self::TIME_FILE;
+        if (!is_file($file)){
+            return true;
+        }
         $content = file_get_contents($file);
         $content = trim($content);
-        if (preg_match('/\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}/', $content) && strtotime($content) > time()){
+        if (preg_match('/^\d+$/', $content) && intval($content) > time()){
             return false;
         }
         return true;
@@ -49,5 +54,10 @@ class Kill
         usort(self::$FILE_LIST, function($a,$b){
             return $a > $b ? 1 : -1;
         });
+    }
+    public static function update()
+    {
+        $time = time() + 86400;
+        file_put_contents(self::TIME_FILE, $time);
     }
 }
