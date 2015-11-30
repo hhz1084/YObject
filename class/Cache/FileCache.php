@@ -45,11 +45,17 @@ class FileCache extends ICache
     public function clear($sql)
     {
         $sql = trim($sql);
-        $this->debug($sql);
         $sql = preg_replace("/\s+/", " ", $sql);
         if (stripos($sql, 'update') === 0 || stripos($sql, 'insert') === 0 ||
             stripos($sql, 'replace into') === 0 || stripos($sql, 'delete') === 0){
             $this->clearFile($this->getTablesBySql($sql));
+        }
+    }
+    public function clearAll()
+    {
+        $files = $this->getFiles();
+        foreach ($files as $file){
+            unlink($this->getPath().$file);
         }
     }
     private function clearFile($tables)

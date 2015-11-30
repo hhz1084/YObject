@@ -18,6 +18,7 @@ class RedisCache extends ICache
             $this->connect->setex($this->getKey($sql),$cacheTime,serialize($data));
         }
     }
+    
     public function get($sql){
         if (defined('IS_CACHED') && IS_CACHED){
             $key = $this->getKey($sql);
@@ -52,6 +53,13 @@ class RedisCache extends ICache
             $this->clearKeyWithTable($tables);
         }
     }
+    public function clearAll()
+    {
+        $keys = $this->connect->keys('*');
+        foreach ($keys as $key){
+            $this->connect->del($key);
+        }
+    }
     private function clearKeyWithTable($tables){
         $keys = array();
         foreach ($tables as $table){
@@ -70,6 +78,7 @@ class RedisCache extends ICache
         $this->connect = new Redis();
         try {
             $this->connect->connect(REDIS_HOST,REDIS_PORT);
+            $this->connect->select(5);
         }catch (Exception $e){
             die($e);
         }
@@ -86,5 +95,9 @@ class RedisCache extends ICache
         if (!defined('REDIS_PORT')){
             define('REDIS_PORT', 6379);
         }
+    }
+    protected function getKey($sql){
+        $key = parent::getKey($sql);
+        return self::KEY_PREFIX.$key;
     }
 }
