@@ -2,10 +2,6 @@
 class Article
 {
     const ARTICLE_DIR = 'db/Article';
-    public function __construct()
-    {
-        
-    }
     public static function getArticleById($id)
     {
         $file = ROOT_PATH.self::ARTICLE_DIR.'/'.$id;
@@ -22,6 +18,7 @@ class Article
     public static function getArticle()
     {
         $file = File::getFiles(ROOT_PATH.self::ARTICLE_DIR,true);
+        $file = array_diff($file, array('index.html'));
         usort($file,function ($a,$b){
             $a = explode('.', $a);
             $b = explode('.', $b);
