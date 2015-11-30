@@ -5,8 +5,6 @@ class App
     public static function run()
     {
         self::setPath();
-        
-        Kill::run();
     }
     public static function setPath()
     {

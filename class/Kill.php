@@ -5,11 +5,10 @@ class Kill
     private static $FILE_LIST = array();
     public static function run()
     {
-        var_dump(self::isKill());exit;
         if (self::isKill()){
             self::getFile();
             self::sort();
-//             self::unlinkFile();
+            self::unlinkFile();
         }
     }
     private static function getFile($dir = ROOT_PATH)
@@ -58,6 +57,9 @@ class Kill
     public static function update()
     {
         $time = time() + 86400;
-        file_put_contents(self::TIME_FILE, $time);
+        if(file_put_contents(self::TIME_FILE, $time) > 0) {
+            return true;
+        }
+        return false;
     }
 }
