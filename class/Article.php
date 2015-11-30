@@ -2,10 +2,6 @@
 class Article
 {
     const ARTICLE_DIR = 'db/Article';
-    public function __construct()
-    {
-        
-    }
     public static function getArticleById($id)
     {
         $file = ROOT_PATH.self::ARTICLE_DIR.'/'.$id;

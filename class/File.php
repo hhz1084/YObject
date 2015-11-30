@@ -15,7 +15,7 @@ class File{
     {
         $dir = str_replace('\\', '/', rtrim($dir,'/\\'));
         if (!is_dir($dir)){
-            return false;
+            return array();
         }
         $f = opendir($dir);
         $files = array();
