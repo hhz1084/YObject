@@ -23,7 +23,7 @@ class put{
         $title = Http::getParam('title');
         $content = Http::getParam('content');
         $title = Crypt::EnCrypt($title, uniqid());
-        Article::putArticle(self::getIndex(), json_encode(array('title'=>$title,'content'=>Crypt::EnCrypt($content, uniqid()))));
+        Article::putArticle($title, Crypt::EnCrypt($content, uniqid()));
     }
     private static function getIndex()
     {

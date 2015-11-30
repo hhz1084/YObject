@@ -1,43 +1,34 @@
 <?php
 class Article
 {
-    const ARTICLE_DIR = 'db/Article';
     public static function getArticleById($id)
     {
-        $file = ROOT_PATH.self::ARTICLE_DIR.'/'.$id;
-        if(!is_file($file)){
+        $sql = "SELECT * FROM ii_article WHERE id={$id}";
+        $data = App::$db->get_row($sql);
+        if(empty($data)){
             return false;
         }
-        $data = File::read($file);
-        $data = json_decode($data,true);
+        $data['title'] = Crypt::DeCrypt($data['title'], uniqid());
+        $data['content'] = Crypt::DeCrypt($data['content'], uniqid());
+        return $data;
+    }
+    public static function getArticle($page = 1)
+    {
+        $sql = "SELECT id,title FROM ii_article LIMIT ".(($page-1)*PAGE_SIZE) . ','.PAGE_SIZE;
+        $data = App::$db->get_all($sql);
         foreach ($data as $k=>$v){
-            $data[$k] = Crypt::DeCrypt($v, uniqid());
+            $data[$k]['title'] = Crypt::DeCrypt($v['title'], uniqid());
         }
         return $data;
     }
-    public static function getArticle()
-    {
-        $file = File::getFiles(ROOT_PATH.self::ARTICLE_DIR,true);
-        $file = array_diff($file, array('index.html'));
-        usort($file,function ($a,$b){
-            $a = explode('.', $a);
-            $b = explode('.', $b);
-            return intval($a[0]) > intval($b[0]) ? -1 : 1;
-        });
-        $result = array();
-        foreach ($file as $f){
-            $c = File::read(ROOT_PATH.self::ARTICLE_DIR.'/'.$f);
-            $c = json_decode($c,true);
-            $tmp = array(
-                'id'=>$f,
-                'title'=>Crypt::DeCrypt($c['title'], uniqid())
-            );
-            $result[] = $tmp;
-        }
-        return $result;
-    }
     public static function putArticle($title,$content)
     {
-        File::write(ROOT_PATH, self::ARTICLE_DIR.'/'.$title, $content);
+        $data = array(
+            'title'=>App::$db->filterStr($title),
+            'content'=>App::$db->filterStr($content),
+            'ctime'=>date('Y-m-d H:i:s'),
+            'mtime'=>date('Y-m-d H:i:s')
+        );
+        App::$db->query(App::$db->get_insert_db_sql('ii_article', $data));
     }
 }
