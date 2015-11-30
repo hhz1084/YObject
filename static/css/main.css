@@ -4,3 +4,9 @@
 .content{
 	text-indent: 2em;
 }
+.back-btn{
+	float:left;
+	height:28px;
+	line-height: 28px;
+	padding:0px 12px;
+}

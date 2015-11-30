@@ -11,6 +11,7 @@
 <body>
     <div class="panel panel-info">
       <div class="panel-heading">
+      <a href="<?php echo $back?>" class="btn btn-info back-btn">返回</a>
       <?php echo $article['title']?>
       </div>
       <div class="panel-body">
